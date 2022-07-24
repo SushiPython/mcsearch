@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mcsearch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h1>mcsearch</h1>
+            <h3>browse over <span class="white">{{serverData.count}}</span> servers</h3>
+            <hr class="white"><br>
+            <form action="/search" method="get">
+                <div class="options text-left">
+                    <label class="salmon" for="query">motd query</label>
+                    <input type="text" name="query" id="query"><br>
+                    <label for="brand" class="salmon">server brand</label>
+                    <select name="brand" id="brand">
+                        <option value="all">all</option>
+                        <option value="vanilla">vanilla</option>
+                        <option value="forge">forge</option>
+                    </select><br>
+                    <label class="salmon" for="online">online</label>
+                    <input type="number" name="online" id="online"><br>
+                </div>
+                <button class="btn btn-primary" id="search">search</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+<style>
+/* vertical and horizontal center */
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.text-center {
+    text-align: center;
+}
+.text-left {
+    text-align: left;
+}
+body, .btn, select, option {
+    background-color: #1E1E24;
+    font-family: 'Roboto Mono', monospace;
+}
+h1 {
+    color: #F7EBE8;
+}
+h3 {
+    color: #8D99AE;
+}
+.white {
+    color: #F7EBE8;
+}
+input[type=text], input[type=number], select, option {
+    background-color: #1E1E24;
+    border: 1px solid #8D99AE;
+    color: #F7EBE8;
+    margin-bottom: 1em;
+}
+.salmon {
+    color: #FFA987;
+}
+.btn {
+    background-color: #1E1E24;
+    border: 1px solid #8D99AE;
+    color: #FFA987;
+}
+</style>
