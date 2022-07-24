@@ -73,9 +73,9 @@ app.get('/search', (req, res) => {
             if (description.toLowerCase().startsWith(query.toLowerCase()) && banner.players.online >= online) {
                 if (brand == "all") {
                     matches.push(server)
-                } else if (brand == "vanilla" && !banner.hasOwnproperty('forgeData')) {
+                } else if (brand == "vanilla" && !banner.hasOwnProperty('forgeData')) {
                     matches.push(server)
-                } else if (brand == "forge" && banner.hasOwnproperty('forgeData')) {
+                } else if (brand == "forge" && banner.hasOwnProperty('forgeData')) {
                     matches.push(server)
                 }
             }
