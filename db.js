@@ -1,6 +1,7 @@
 const MongoClient = require('mongodb').MongoClient
 const { response } = require('express')
 const pinger = require('minecraft-pinger')
+const motdParser = require("motd-parser")("1.17");
 require('dotenv').config()
 
 module.exports = {findServer, serverCount}
@@ -16,22 +17,29 @@ async function connect() {
 connect()
 
 async function serverCount() {
-    const result = await coll.countDocuments()
-    return result
+    if (coll) {
+        const result = await coll.countDocuments()
+        return result
+    } else {
+        return 0
+    }
 }
 
 async function findServer(query, brand, online, version, max) {
-    let pipeline = [{
-        '$search': {
-            'index': 'motd',
-            'text': {
-            'query': query,
-            'path': {
-                'wildcard': '*'
-            }
-        }},
-    }]
-    if (version != "-1") {
+    let pipeline = []
+    if (query) {
+        pipeline.push({
+            '$search': {
+                'index': 'motd',
+                'text': {
+                'query': query,
+                'path': {
+                    'wildcard': '*'
+                }
+            }},
+        })
+    }
+    if (version) {
         pipeline.push({
             '$match': {
                 'minecraft.version.protocol': parseInt(version)
@@ -70,7 +78,6 @@ async function findServer(query, brand, online, version, max) {
             }
         })
     }
-    console.log(JSON.stringify(pipeline))
     if (coll) {
         const aggCursor = coll.aggregate(pipeline)
         let matches = []
@@ -83,9 +90,12 @@ async function findServer(query, brand, online, version, max) {
             pinger.ping(ip, port, (err, res) => {
                 if (!err && matches.length <= max) {
                     if (res.players.online >= online) {
-                        res.ip = ip
-                        res.port = port
-                        res.motd = doc.minecraft.description
+                        if (port === "25565") {
+                            res.ip = ip
+                        } else {
+                            res.ip = ip + ":" + port
+                        }
+                        res.motd = doc.minecraft.description.replace('Â', '')
                         delete res.description
                         delete res.previewsChat
                         matches.push(res)

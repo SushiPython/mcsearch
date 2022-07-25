@@ -13,25 +13,19 @@
     <div class="container">
         <div class="header text-center">
             <h1>mcsearch</h1>
-            <h3>browse over <span class="white">{{serverCount}}</span> servers</h3>
+            <h3>showing top <span class="white">{{servers.length}}</span> results</h3>
             <hr class="white"><br>
-            <form action="/search" method="get">
-                <div class="options text-left">
-                    <label class="salmon" for="query">motd query</label>
-                    <input type="text" name="query" id="query"><br>
-                    <label onclick="window.open('https://wiki.vg/Protocol_version_numbers')" class="salmon underlined" for="version">version #</label>
-                    <input type="number" name="version" id="version"><br>
-                    <label for="brand" class="salmon">server brand</label>
-                    <select name="brand" id="brand">
-                        <option value="all">all</option>
-                        <option value="vanilla">vanilla</option>
-                        <option value="forge">forge</option>
-                    </select><br>
-                    <label class="salmon" for="online">online</label>
-                    <input type="number" name="online" id="online"><br>
+            <div class="options">
+                {% for server in servers %}
+                <div class="server">
+                    <span class="salmon">{{server.ip}}</span><br>
+                    <span class="white">{{server.motd|safe}}</span>
+                    <div class="players">
+                        <span class="salmon">{{server.players.online}}</span><span class="white">/{{server.players.max}}</span>
+                    </div>
                 </div>
-                <button class="btn btn-primary" id="search">search</button>
-            </form>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </body>
@@ -82,5 +76,8 @@ input[type=text], input[type=number], select, option {
 }
 .underlined:hover {
     cursor: pointer;
+}
+.server {
+    margin-bottom: 1em;
 }
 </style>
