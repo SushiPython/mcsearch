@@ -19,9 +19,9 @@
                 {% for server in servers %}
                 <div class="server">
                     <span class="salmon">{{server.ip}}</span><br>
-                    <span class="white">{{server.motd|safe}}</span>
+                    <span class="white">{{server.minecraft.description|safe}}</span>
                     <div class="players">
-                        <span class="salmon">{{server.players.online}}</span><span class="white">/{{server.players.max}}</span>
+                        <span class="salmon">{{server.minecraft.players.online}}</span><span class="white">/{{server.minecraft.players.max}}</span>
                     </div>
                 </div>
                 {% endfor %}

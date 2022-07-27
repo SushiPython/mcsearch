@@ -1,7 +1,4 @@
 const MongoClient = require('mongodb').MongoClient
-const { response } = require('express')
-const pinger = require('minecraft-pinger')
-const motdParser = require("motd-parser")("1.17");
 require('dotenv').config()
 
 module.exports = {findServer, serverCount}
@@ -29,17 +26,17 @@ async function findServer(query, brand, online, version, max) {
     let pipeline = []
     if (query) {
         pipeline.push({
-            '$search': {
-                'index': 'motd',
-                'text': {
-                'query': query,
-                'path': {
-                    'wildcard': '*'
+            $search: {
+                index: 'motd',
+                text: {
+                query: query,
+                path: {
+                    wildcard: '*'
                 }
             }},
         })
     }
-    if (version) {
+    if (version && version != "-1") {
         pipeline.push({
             '$match': {
                 'minecraft.version.protocol': parseInt(version)
@@ -78,30 +75,13 @@ async function findServer(query, brand, online, version, max) {
             }
         })
     }
+    console.log(JSON.stringify(pipeline))
     if (coll) {
-        const aggCursor = coll.aggregate(pipeline)
+        const aggCursor = coll.aggregate(pipeline).limit(5)
         let matches = []
         for await (const doc of aggCursor) {
-            if (matches.length >= max) {
-                return matches
-            }
-            let ip = doc.ip.split(":")[0]   
-            let port = doc.ip.split(":")[1]
-            pinger.ping(ip, port, (err, res) => {
-                if (!err && matches.length <= max) {
-                    if (res.players.online >= online) {
-                        if (port === "25565") {
-                            res.ip = ip
-                        } else {
-                            res.ip = ip + ":" + port
-                        }
-                        res.motd = doc.minecraft.description.replace('Â', '')
-                        delete res.description
-                        delete res.previewsChat
-                        matches.push(res)
-                    }
-                }
-            })
+            console.log(JSON.stringify(doc))
+            matches.push(doc)
         }
         return matches
     } else {

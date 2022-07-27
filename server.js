@@ -29,7 +29,6 @@ app.get('/search', async (req, res) => {
     let online = req.query.online
     let version = req.query.version
     let matches = await db.findServer(query, brand, online, version, 5)
-    console.log(matches)
     res.render('matches', {
         servers: matches
     })
