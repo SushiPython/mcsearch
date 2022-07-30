@@ -80,7 +80,7 @@ async function findServer(query, brand, online, version, max) {
         const aggCursor = coll.aggregate(pipeline).limit(5)
         let matches = []
         for await (const doc of aggCursor) {
-            console.log(JSON.stringify(doc))
+            doc.minecraft.description = doc.minecraft.description.replace("Â", "")
             matches.push(doc)
         }
         return matches
